@@ -6,7 +6,6 @@ metadata:
 spec:
   selector:
     app: nginx-pro
-    release: canary
   type: NodePort
   ports: 
   - port: 80
