@@ -10,9 +10,6 @@ spec:
         app: nginx-pro
     spec:
       containers:
-      - image: 192.168.56.12/k8s-ops/nginx_pro:<BUILD_TAG>
+      - image: 192.168.56.12/k8s-ops/nginx_pro:${build_tag}
         imagePullPolicy: IfNotPresent
         name: nginx
-        env:
-        - name: branch
-          value: <BRANCH_NAME>
