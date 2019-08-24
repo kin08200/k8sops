@@ -38,25 +38,40 @@ node('ops-jnlp'){
     )
     echo "This is a deploy step to ${userInput}"
     if (userInput == "Dev") {
-            // deploy dev stuff
+            echo "deploy to the DEV"
         } else if (userInput == "QA"){
-            // deploy qa stuff
+            echo "deploy to the QA"
         } else {
-            // deploy prod stuff
-        }
-    echo "4. Check deployment status on k8s"
-    def is_deployed = sh (script: "kubectl get deployment  -n ${K8S_NAMESPACE} | grep -w ${DEP_NAME} |awk {'print \$(1)'}" , returnStdout: true).trim()
-        if ( is_deployed ){
-            stage('rolling update APP to k8s') {
-                sh ("kubectl set image deployment/${DEP_NAME} ${CONTAINER_NAME}=${DOCKER_REGISTRY}/${PRO_NAME}:${build_tag} -n ${K8S_NAMESPACE}")
+            echo "deploy to the PRO"
+                echo "4. Check deployment status on k8s"
+                def is_deployed = sh (script: "kubectl get deployment  -n ${K8S_NAMESPACE} | grep -w ${DEP_NAME} |awk {'print \$(1)'}" , returnStdout: true).trim()
+                if ( is_deployed ){
+                stage('rolling update APP to k8s') {
+                    sh ("kubectl set image deployment/${DEP_NAME} ${CONTAINER_NAME}=${DOCKER_REGISTRY}/${PRO_NAME}:${build_tag} -n ${K8S_NAMESPACE}")
+                }
+              }
+                else {
+                    stage('deploy APP to k8s') {
+                    sh "sed -i 's/<BUILD_TAG>/${build_tag}/' nginx.yaml"
+                    sh "kubectl apply -f nginx.yaml"
+                    sh "kubectl apply -f nginx-svc.yaml" 
+                    }
+                }
             }
         }
-        else {
-            stage('deploy APP to k8s') {
-               sh "sed -i 's/<BUILD_TAG>/${build_tag}/' nginx.yaml"
-               sh "kubectl apply -f nginx.yaml"
-               sh "kubectl apply -f nginx-svc.yaml" 
-            }
-        }
-    }
+#    echo "4. Check deployment status on k8s"
+#    def is_deployed = sh (script: "kubectl get deployment  -n ${K8S_NAMESPACE} | grep -w ${DEP_NAME} |awk {'print \$(1)'}" , returnStdout: true).trim()
+#        if ( is_deployed ){
+#            stage('rolling update APP to k8s') {
+#                sh ("kubectl set image deployment/${DEP_NAME} ${CONTAINER_NAME}=${DOCKER_REGISTRY}/${PRO_NAME}:${build_tag} -n ${K8S_NAMESPACE}")
+#            }
+#        }
+#        else {
+#            stage('deploy APP to k8s') {
+#               sh "sed -i 's/<BUILD_TAG>/${build_tag}/' nginx.yaml"
+#               sh "kubectl apply -f nginx.yaml"
+#               sh "kubectl apply -f nginx-svc.yaml" 
+#            }
+#        }
+#   }
 }
