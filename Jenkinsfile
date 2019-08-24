@@ -36,6 +36,14 @@ node('ops-jnlp'){
             ]
         ]
     )
+    echo "This is a deploy step to ${userInput}"
+    if (userInput == "Dev") {
+            // deploy dev stuff
+        } else if (userInput == "QA"){
+            // deploy qa stuff
+        } else {
+            // deploy prod stuff
+        }
     echo "4. Check deployment status on k8s"
     def is_deployed = sh (script: "kubectl get deployment  -n ${K8S_NAMESPACE} | grep -w ${DEP_NAME} |awk {'print \$(1)'}" , returnStdout: true).trim()
         if ( is_deployed ){
