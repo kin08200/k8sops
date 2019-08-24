@@ -59,19 +59,20 @@ node('ops-jnlp'){
                 }
             }
         }
-#    echo "4. Check deployment status on k8s"
-#    def is_deployed = sh (script: "kubectl get deployment  -n ${K8S_NAMESPACE} | grep -w ${DEP_NAME} |awk {'print \$(1)'}" , returnStdout: true).trim()
-#        if ( is_deployed ){
-#            stage('rolling update APP to k8s') {
-#                sh ("kubectl set image deployment/${DEP_NAME} ${CONTAINER_NAME}=${DOCKER_REGISTRY}/${PRO_NAME}:${build_tag} -n ${K8S_NAMESPACE}")
-#            }
-#        }
-#        else {
-#            stage('deploy APP to k8s') {
-#               sh "sed -i 's/<BUILD_TAG>/${build_tag}/' nginx.yaml"
-#               sh "kubectl apply -f nginx.yaml"
-#               sh "kubectl apply -f nginx-svc.yaml" 
-#            }
-#        }
-#   }
+/*    echo "4. Check deployment status on k8s"
+      def is_deployed = sh (script: "kubectl get deployment  -n ${K8S_NAMESPACE} | grep -w ${DEP_NAME} |awk {'print \$(1)'}" , returnStdout: true).trim()
+        if ( is_deployed ){
+            stage('rolling update APP to k8s') {
+                sh ("kubectl set image deployment/${DEP_NAME} ${CONTAINER_NAME}=${DOCKER_REGISTRY}/${PRO_NAME}:${build_tag} -n ${K8S_NAMESPACE}")
+            }
+        }
+        else {
+            stage('deploy APP to k8s') {
+               sh "sed -i 's/<BUILD_TAG>/${build_tag}/' nginx.yaml"
+               sh "kubectl apply -f nginx.yaml"
+               sh "kubectl apply -f nginx-svc.yaml" 
+            }
+        }
+   }
+*/
 }
