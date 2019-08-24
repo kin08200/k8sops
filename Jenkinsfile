@@ -25,6 +25,17 @@ node('ops-jnlp'){
     }
   }
     stage('Check'){
+    def userInput = input(
+        id: 'userInput',
+        message: 'Choose a deploy environment',
+        parameters: [
+            [
+                $class: 'ChoiceParameterDefinition',
+                choices: "Dev\nQA\nProd",
+                name: 'Env'
+            ]
+        ]
+    )
     echo "4. Check deployment status on k8s"
     def is_deployed = sh (script: "kubectl get deployment  -n ${K8S_NAMESPACE} | grep -w ${DEP_NAME} |awk {'print \$(1)'}" , returnStdout: true).trim()
         if ( is_deployed ){
